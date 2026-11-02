@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"><title>flare_ring — Volcanic Phoenix (flipbook)</title>
+<style>html,body{margin:0;background:transparent}body.preview{background:#1b1f33;display:grid;place-items:center;height:100vh}canvas{display:block}</style>
+</head><body>
+<!-- Ação Flare: anel de brasas que abre do peito com fumaça no fim (OneShot, 1,2 s).
+Contrato de Recursos/VFX/halo-solar.html: canvas #fx, window.renderFrame(t) determinístico, fundo transparente, margem ~8%. -->
+<canvas id="fx" width="512" height="512"></canvas>
+<script>
+const canvas=document.getElementById('fx'),ctx=canvas.getContext('2d');
+function rng(seed){return()=>(seed=(seed*16807)%2147483647)/2147483647;}
+function glow(x,y,r,stops){const g=ctx.createRadialGradient(x,y,0,x,y,r);stops.forEach(([p,c])=>g.addColorStop(p,c));ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();}
+window.renderFrame=function(t){const s=canvas.width,c=s/2;ctx.clearRect(0,0,s,s);ctx.save();ctx.translate(c,c);
+const e=1-Math.pow(1-t,3),R=s*0.08+s*0.32*e,a=Math.max(0,1-t*1.1);
+if(t>0.35){const sm=Math.sin((t-0.35)/0.65*Math.PI)*0.45;const r=rng(3);for(let i=0;i<9;i++){const th=r()*Math.PI*2,rr=R*(0.8+r()*0.3);glow(Math.cos(th)*rr,Math.sin(th)*rr-(t-0.35)*s*0.1,s*0.09,[[0,`rgba(95,88,100,${sm})`],[1,'rgba(80,75,85,0)']]);}}
+ctx.globalCompositeOperation='lighter';
+if(t<0.25)glow(0,0,s*0.3*(1-t*4)+s*0.05,[[0,`rgba(255,250,220,${1-t*4})`],[1,'rgba(255,150,40,0)']]);
+ctx.strokeStyle=`rgba(255,170,60,${a})`;ctx.lineWidth=s*0.05*(1-e)+s*0.008;ctx.beginPath();ctx.arc(0,0,R,0,Math.PI*2);ctx.stroke();
+ctx.strokeStyle=`rgba(255,240,180,${a*0.8})`;ctx.lineWidth=s*0.012;ctx.beginPath();ctx.arc(0,0,R*0.92,0,Math.PI*2);ctx.stroke();
+for(let i=0;i<24;i++){const th=i/24*Math.PI*2,rr=R*(1.05+0.15*(i%3));glow(Math.cos(th)*rr,Math.sin(th)*rr,s*0.022,[[0,`rgba(255,235,160,${a})`],[1,'rgba(255,110,30,0)']]);}
+ctx.restore();};
+if(!navigator.webdriver){document.body.classList.add('preview');let t0=performance.now();(function loop(n){window.renderFrame(((n-t0)/1400)%1);requestAnimationFrame(loop);})(t0);}
+</script></body></html>

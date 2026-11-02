@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Molten Dragon — faísca de brasa (Random)</title>
+<style>html, body { margin: 0; background: transparent; } body.preview { background: #1b1f33; display: grid; place-items: center; height: 100vh; } canvas { display: block; }</style>
+</head>
+<body>
+<!-- Efeito do Molten Dragon (Mythic, Volcano) para flipbook do Roblox: faísca de brasa (Random)
+     Contrato de Recursos/VFX/halo-solar.html: <canvas id="fx">, window.renderFrame(t) determinístico, margem de 8%.
+     Gerar: python .framework/flipbook.py "Recursos/Pets lendarios e miticos/Molten Dragon/vfx/brasa.html" --grade 4 --loop -->
+<canvas id="fx" width="512" height="512"></canvas>
+<script>
+const canvas = document.getElementById('fx');
+const ctx = canvas.getContext('2d');
+function rng(seed) { return () => (seed = (seed * 16807) % 2147483647) / 2147483647; }
+function glow(x, y, r, stops) {
+  const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+  stops.forEach(([o, c]) => g.addColorStop(o, c));
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+}
+const TAU = Math.PI * 2;
+window.renderFrame = function (t) {
+  const s = canvas.width, c = s / 2;
+  ctx.clearRect(0, 0, s, s);
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+
+  // 16 brasas diferentes; FlipbookMode Random sorteia uma por partícula
+  const i = Math.round(t * 16), R = rng(101 + i * 7);
+  const r = s * (0.05 + 0.05 * R()), stretch = 1 + 2 * R(), ang = R() * TAU;
+  ctx.translate(c, c); ctx.rotate(ang); ctx.scale(stretch, 1);
+  glow(0, 0, r * 2.4, [[0, 'rgba(255,240,170,0.95)'], [0.3, 'rgba(255,150,40,0.6)'], [1, 'rgba(255,60,10,0)']]);
+  ctx.restore();
+};
+if (!navigator.webdriver) {
+  document.body.classList.add('preview');
+  const t0 = performance.now();
+  (function loop(now) { window.renderFrame(((now - t0) / 1000 / 0.8) % 1); requestAnimationFrame(loop); })(t0);
+}
+</script>
+</body>
+</html>

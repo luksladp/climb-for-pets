@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"><title>Lava Titan — magma_drip</title>
+<style>html,body{margin:0;background:transparent}canvas{display:block}</style></head>
+<body>
+<!-- Lava Titan v3, efeito "magma_drip" para flipbook (.framework/flipbook.py). Contrato de Recursos/VFX/halo-solar.html:
+     canvas #fx quadrado, fundo transparente, window.renderFrame(t) determinístico, margem ~8%. -->
+<canvas id="fx" width="512" height="512"></canvas>
+<script>
+const canvas=document.getElementById('fx'),ctx=canvas.getContext('2d');
+function rng(seed){return()=>(seed=(seed*16807)%2147483647)/2147483647;}
+function blob(x,y,r,stops){const g=ctx.createRadialGradient(x,y,0,x,y,r);stops.forEach(([o,c])=>g.addColorStop(o,c));ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();}
+window.renderFrame=function(t){const s=canvas.width;ctx.clearRect(0,0,s,s);ctx.globalCompositeOperation='lighter';
+ const stretch=1+1.6*Math.min(t*2,1),y=s*(0.2+0.55*t*t),rw=s*0.13/Math.sqrt(stretch),rh=s*0.11*stretch;
+ const hot=[255,Math.round(210-150*t),Math.round(64-50*t)];
+ ctx.save();ctx.translate(s/2,y);ctx.scale(rw/(s*0.1),rh/(s*0.1));
+ blob(0,0,s*0.1,[[0,`rgba(255,250,200,${1-t*0.7})`],[0.35,`rgba(${hot},${0.95-t*0.4})`],[1,'rgba(255,60,10,0)']]);ctx.restore();
+ blob(s/2,y,s*0.2,[[0,`rgba(255,110,20,${0.35*(1-t)})`],[1,'rgba(255,74,16,0)']]);
+ if(t>0.8){const q=(t-0.8)/0.2;ctx.strokeStyle=`rgba(255,140,40,${1-q})`;ctx.lineWidth=s*0.02;ctx.beginPath();ctx.ellipse(s/2,s*0.84,s*0.25*q,s*0.06*q,0,0,Math.PI*2);ctx.stroke();}
+};
+if(!navigator.webdriver){document.body.style.background='#1b1f33';let t0=performance.now();(function f(n){window.renderFrame(((n-t0)/1600)%1);requestAnimationFrame(f);})(t0);}
+</script></body></html>

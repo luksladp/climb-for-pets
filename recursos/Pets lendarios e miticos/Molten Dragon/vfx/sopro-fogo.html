@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Molten Dragon — explosão do cone de fogo do Breath (OneShot)</title>
+<style>html, body { margin: 0; background: transparent; } body.preview { background: #1b1f33; display: grid; place-items: center; height: 100vh; } canvas { display: block; }</style>
+</head>
+<body>
+<!-- Efeito do Molten Dragon (Mythic, Volcano) para flipbook do Roblox: explosão do cone de fogo do Breath (OneShot)
+     Contrato de Recursos/VFX/halo-solar.html: <canvas id="fx">, window.renderFrame(t) determinístico, margem de 8%.
+     Gerar: python .framework/flipbook.py "Recursos/Pets lendarios e miticos/Molten Dragon/vfx/sopro-fogo.html" --grade 4  -->
+<canvas id="fx" width="512" height="512"></canvas>
+<script>
+const canvas = document.getElementById('fx');
+const ctx = canvas.getContext('2d');
+function rng(seed) { return () => (seed = (seed * 16807) % 2147483647) / 2147483647; }
+function glow(x, y, r, stops) {
+  const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+  stops.forEach(([o, c]) => g.addColorStop(o, c));
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+}
+const TAU = Math.PI * 2;
+window.renderFrame = function (t) {
+  const s = canvas.width, c = s / 2;
+  ctx.clearRect(0, 0, s, s);
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+
+  // bola de fogo que abre, fica laranja e vira brasa
+  const R = rng(23), e = 1 - (1 - t) ** 2;
+  for (let i = 0; i < 18; i++) {
+    const a = R() * TAU, d = s * 0.28 * e * (0.3 + 0.7 * R());
+    const r = s * (0.09 + 0.08 * R()) * (0.6 + 0.8 * e) * (1 - 0.5 * t);
+    const hot = Math.max(0, 1 - t * 1.6), al = 0.85 * (1 - t) ** 1.2;
+    glow(c + Math.cos(a) * d, c + Math.sin(a) * d, r,
+         [[0, `rgba(255,${150 + 100 * hot},${40 + 160 * hot},${al})`], [1, 'rgba(230,50,10,0)']]);
+  }
+  glow(c, c, s * 0.2 * (1 - t), [[0, `rgba(255,255,230,${1 - t})`], [1, 'rgba(255,200,80,0)']]);
+  ctx.restore();
+};
+if (!navigator.webdriver) {
+  document.body.classList.add('preview');
+  const t0 = performance.now();
+  (function loop(now) { window.renderFrame(((now - t0) / 1000 / 1.0) % 1); requestAnimationFrame(loop); })(t0);
+}
+</script>
+</body>
+</html>

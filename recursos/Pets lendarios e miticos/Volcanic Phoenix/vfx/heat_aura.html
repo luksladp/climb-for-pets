@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"><title>heat_aura — Volcanic Phoenix (flipbook)</title>
+<style>html,body{margin:0;background:transparent}body.preview{background:#1b1f33;display:grid;place-items:center;height:100vh}canvas{display:block}</style>
+</head><body>
+<!-- Aura de brasa leve sob as asas (Loop): anel de calor ondulante com fagulhas subindo.
+Contrato de Recursos/VFX/halo-solar.html: canvas #fx, window.renderFrame(t) determinístico, fundo transparente, margem ~8%. -->
+<canvas id="fx" width="512" height="512"></canvas>
+<script>
+const canvas=document.getElementById('fx'),ctx=canvas.getContext('2d');
+function rng(seed){return()=>(seed=(seed*16807)%2147483647)/2147483647;}
+function glow(x,y,r,stops){const g=ctx.createRadialGradient(x,y,0,x,y,r);stops.forEach(([p,c])=>g.addColorStop(p,c));ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();}
+window.renderFrame=function(t){const s=canvas.width,c=s/2;ctx.clearRect(0,0,s,s);ctx.save();ctx.translate(c,c);ctx.globalCompositeOperation='lighter';
+const R=s*0.3;for(let k=0;k<3;k++){const ph=(t+k/3)%1;const rr=R*(0.6+0.55*ph),a=Math.sin(ph*Math.PI)*0.55;
+ctx.strokeStyle=`rgba(255,${Math.round(120+80*(1-ph))},40,${a})`;ctx.lineWidth=s*(0.05*(1-ph)+0.01);ctx.beginPath();
+for(let i=0;i<=64;i++){const th=i/64*Math.PI*2,w=rr*(1+0.06*Math.sin(th*6+t*Math.PI*2*2));const x=Math.cos(th)*w,y=Math.sin(th)*w*0.45;i?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.stroke();}
+const r=rng(5);for(let i=0;i<14;i++){const x=(r()-0.5)*R*2,ph=(t+r())%1,y=R*0.3-ph*R*1.1,a=Math.sin(ph*Math.PI);glow(x,y,s*0.025,[[0,`rgba(255,230,150,${a})`],[1,'rgba(255,120,30,0)']]);}
+ctx.restore();};
+if(!navigator.webdriver){document.body.classList.add('preview');let t0=performance.now();(function loop(n){window.renderFrame(((n-t0)/1400)%1);requestAnimationFrame(loop);})(t0);}
+</script></body></html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Molten Dragon — chama de aura que sobe do dorso (Loop)</title>
+<style>html, body { margin: 0; background: transparent; } body.preview { background: #1b1f33; display: grid; place-items: center; height: 100vh; } canvas { display: block; }</style>
+</head>
+<body>
+<!-- Efeito do Molten Dragon (Mythic, Volcano) para flipbook do Roblox: chama de aura que sobe do dorso (Loop)
+     Contrato de Recursos/VFX/halo-solar.html: <canvas id="fx">, window.renderFrame(t) determinístico, margem de 8%.
+     Gerar: python .framework/flipbook.py "Recursos/Pets lendarios e miticos/Molten Dragon/vfx/chama-aura.html" --grade 4 --loop -->
+<canvas id="fx" width="512" height="512"></canvas>
+<script>
+const canvas = document.getElementById('fx');
+const ctx = canvas.getContext('2d');
+function rng(seed) { return () => (seed = (seed * 16807) % 2147483647) / 2147483647; }
+function glow(x, y, r, stops) {
+  const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+  stops.forEach(([o, c]) => g.addColorStop(o, c));
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+}
+const TAU = Math.PI * 2;
+window.renderFrame = function (t) {
+  const s = canvas.width, c = s / 2;
+  ctx.clearRect(0, 0, s, s);
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+
+  // língua de fogo: 3 camadas de bolhas que sobem e afinam; fase cíclica fecha o loop
+  const R = rng(11);
+  for (let layer = 0; layer < 3; layer++) {
+    const cols = [['255,90,20', 0.55], ['255,160,40', 0.7], ['255,235,150', 0.9]][layer];
+    for (let i = 0; i < 14; i++) {
+      const ph = (i / 14 + t) % 1, sway = Math.sin((ph * 2 + R()) * TAU) * s * 0.05 * ph;
+      const y = s * 0.86 - ph * s * 0.7, r = s * (0.24 - layer * 0.06) * (1 - ph) ** 0.8;
+      const a = cols[1] * Math.sin(Math.PI * Math.min(1, ph * 1.2));
+      glow(c + sway, y, Math.max(1, r), [[0, `rgba(${cols[0]},${a})`], [1, `rgba(${cols[0]},0)`]]);
+    }
+  }
+  ctx.restore();
+};
+if (!navigator.webdriver) {
+  document.body.classList.add('preview');
+  const t0 = performance.now();
+  (function loop(now) { window.renderFrame(((now - t0) / 1000 / 1.0) % 1); requestAnimationFrame(loop); })(t0);
+}
+</script>
+</body>
+</html>

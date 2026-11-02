@@ -1,0 +1,38 @@
+{
+  "raridade": "mythic",
+  "lote": [
+    "Volcanic Phoenix",
+    "Lava Titan"
+  ],
+  "glb": "MoltenDragon.glb",
+  "build": [
+    [
+      "python3",
+      "{fonte}/core.py"
+    ],
+    [
+      "python3",
+      "{fonte}/build.py"
+    ],
+    [
+      "python3",
+      "{fonte}/rig.py"
+    ]
+  ],
+  "efeitos": [
+    [
+      "mkdir",
+      "-p",
+      "/tmp/md/shots"
+    ],
+    [
+      "python3",
+      "{fonte}/shots.py",
+      "{glb}",
+      "{vfx}",
+      "{saida}/fx"
+    ]
+  ],
+  "efeitos_vistas": "{saida}/fx/{vista}_fx.png",
+  "copiar": []
+}

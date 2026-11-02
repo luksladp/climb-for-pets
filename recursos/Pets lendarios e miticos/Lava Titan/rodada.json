@@ -1,0 +1,32 @@
+{
+  "raridade": "legendary",
+  "lote": [
+    "Volcanic Phoenix",
+    "Molten Dragon"
+  ],
+  "glb": "LavaTitan.glb",
+  "build": [
+    [
+      "python3",
+      "{fonte}/build_v3.py",
+      "--out",
+      "{saida}"
+    ]
+  ],
+  "efeitos": [
+    [
+      "python3",
+      "{fonte}/render_v3.py",
+      "{saida}/lava_titan_v3.blend",
+      "{saida}/fx",
+      "1024",
+      "48",
+      "frente,tres_quartos,lado",
+      "--fx"
+    ]
+  ],
+  "efeitos_vistas": "{saida}/fx/{vista}_fx.png",
+  "copiar": [
+    "LavaTitan_paleta.png"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "raridade": "legendary",
+  "lote": [
+    "Lava Titan",
+    "Molten Dragon"
+  ],
+  "glb": "VolcanicPhoenix.glb",
+  "build": [
+    [
+      "python3",
+      "{fonte}/build.py",
+      "{saida}"
+    ]
+  ],
+  "efeitos": [
+    [
+      "python3",
+      "{fonte}/render.py",
+      "{saida}",
+      "--fx"
+    ]
+  ],
+  "efeitos_vistas": "{saida}/renders/{vista}_fx.png",
+  "copiar": [
+    "tex"
+  ]
+}

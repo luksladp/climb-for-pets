@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Molten Dragon — baforada de fumaça das narinas (OneShot)</title>
+<style>html, body { margin: 0; background: transparent; } body.preview { background: #1b1f33; display: grid; place-items: center; height: 100vh; } canvas { display: block; }</style>
+</head>
+<body>
+<!-- Efeito do Molten Dragon (Mythic, Volcano) para flipbook do Roblox: baforada de fumaça das narinas (OneShot)
+     Contrato de Recursos/VFX/halo-solar.html: <canvas id="fx">, window.renderFrame(t) determinístico, margem de 8%.
+     Gerar: python .framework/flipbook.py "Recursos/Pets lendarios e miticos/Molten Dragon/vfx/fumaca-narina.html" --grade 4  -->
+<canvas id="fx" width="512" height="512"></canvas>
+<script>
+const canvas = document.getElementById('fx');
+const ctx = canvas.getContext('2d');
+function rng(seed) { return () => (seed = (seed * 16807) % 2147483647) / 2147483647; }
+function glow(x, y, r, stops) {
+  const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+  stops.forEach(([o, c]) => g.addColorStop(o, c));
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+}
+const TAU = Math.PI * 2;
+window.renderFrame = function (t) {
+  const s = canvas.width, c = s / 2;
+  ctx.clearRect(0, 0, s, s);
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+
+  // nuvem que cresce e some; ctx normal (fumaça não soma luz)
+  ctx.globalCompositeOperation = 'source-over';
+  const R = rng(5);
+  for (let i = 0; i < 9; i++) {
+    const a = R() * TAU, d = s * 0.08 * R();
+    const x = c + Math.cos(a) * d + (R() - 0.5) * s * 0.18 * t, y = c + Math.sin(a) * d - s * 0.12 * t;
+    const r = s * (0.1 + 0.06 * R()) * (0.5 + 1.3 * t);
+    const al = 0.55 * (1 - t) ** 1.4 * Math.min(1, t * 6);
+    const ember = Math.max(0, 1 - t * 3);
+    glow(x, y, r, [[0, `rgba(${110 + 130 * ember},${95 + 40 * ember},${105 - 40 * ember},${al})`], [1, 'rgba(90,80,95,0)']]);
+  }
+  ctx.restore();
+};
+if (!navigator.webdriver) {
+  document.body.classList.add('preview');
+  const t0 = performance.now();
+  (function loop(now) { window.renderFrame(((now - t0) / 1000 / 1.5) % 1); requestAnimationFrame(loop); })(t0);
+}
+</script>
+</body>
+</html>

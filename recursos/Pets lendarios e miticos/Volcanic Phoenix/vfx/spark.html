@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"><title>spark — Volcanic Phoenix (flipbook)</title>
+<style>html,body{margin:0;background:transparent}body.preview{background:#1b1f33;display:grid;place-items:center;height:100vh}canvas{display:block}</style>
+</head><body>
+<!-- Faíscas soltas (Random, grade 2x2): 4 variações de fagulha em estrela.
+Contrato de Recursos/VFX/halo-solar.html: canvas #fx, window.renderFrame(t) determinístico, fundo transparente, margem ~8%. -->
+<canvas id="fx" width="512" height="512"></canvas>
+<script>
+const canvas=document.getElementById('fx'),ctx=canvas.getContext('2d');
+function rng(seed){return()=>(seed=(seed*16807)%2147483647)/2147483647;}
+function glow(x,y,r,stops){const g=ctx.createRadialGradient(x,y,0,x,y,r);stops.forEach(([p,c])=>g.addColorStop(p,c));ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();}
+window.renderFrame=function(t){const s=canvas.width,c=s/2;ctx.clearRect(0,0,s,s);ctx.save();ctx.translate(c,c);ctx.globalCompositeOperation='lighter';
+const k=Math.floor(t*4+1e-6)%4;const R=s*(0.18+0.05*k);glow(0,0,R*1.3,[[0,'rgba(255,250,220,1)'],[0.25,'rgba(255,190,70,0.8)'],[1,'rgba(255,90,20,0)']]);
+const n=4+k;ctx.rotate(k*0.4);for(let i=0;i<n;i++){ctx.save();ctx.rotate(i/n*Math.PI*2);const L=R*(i%2?1.0:1.7);ctx.fillStyle='rgba(255,220,130,0.9)';ctx.beginPath();ctx.moveTo(0,-s*0.018);ctx.lineTo(L,0);ctx.lineTo(0,s*0.018);ctx.fill();ctx.restore();}
+ctx.restore();};
+if(!navigator.webdriver){document.body.classList.add('preview');let t0=performance.now();(function loop(n){window.renderFrame(((n-t0)/1400)%1);requestAnimationFrame(loop);})(t0);}
+</script></body></html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"><title>core_pulse — Volcanic Phoenix (flipbook)</title>
+<style>html,body{margin:0;background:transparent}body.preview{background:#1b1f33;display:grid;place-items:center;height:100vh}canvas{display:block}</style>
+</head><body>
+<!-- Pulso do coração-brasa no peito (PingPong, 1,4 s). Losango de brasa que incha e brilha.
+Contrato de Recursos/VFX/halo-solar.html: canvas #fx, window.renderFrame(t) determinístico, fundo transparente, margem ~8%. -->
+<canvas id="fx" width="512" height="512"></canvas>
+<script>
+const canvas=document.getElementById('fx'),ctx=canvas.getContext('2d');
+function rng(seed){return()=>(seed=(seed*16807)%2147483647)/2147483647;}
+function glow(x,y,r,stops){const g=ctx.createRadialGradient(x,y,0,x,y,r);stops.forEach(([p,c])=>g.addColorStop(p,c));ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();}
+window.renderFrame=function(t){const s=canvas.width,c=s/2;ctx.clearRect(0,0,s,s);ctx.save();ctx.translate(c,c);ctx.globalCompositeOperation='lighter';
+const p=0.5-0.5*Math.cos(t*Math.PI*2);const R=s*(0.22+0.1*p);
+glow(0,0,R*1.6,[[0,`rgba(255,200,90,${0.55+0.35*p})`],[0.45,`rgba(255,110,40,${0.35+0.3*p})`],[1,'rgba(255,80,20,0)']]);
+ctx.rotate(Math.PI/4);const d=R*0.55;const g=ctx.createLinearGradient(-d,-d,d,d);g.addColorStop(0,'rgba(255,240,170,0.95)');g.addColorStop(1,'rgba(255,140,40,0.9)');
+ctx.fillStyle=g;ctx.fillRect(-d*0.7,-d*0.7,d*1.4,d*1.4);
+ctx.strokeStyle=`rgba(255,220,120,${0.4+0.5*p})`;ctx.lineWidth=s*0.012;ctx.strokeRect(-d,-d,d*2,d*2);ctx.restore();};
+if(!navigator.webdriver){document.body.classList.add('preview');let t0=performance.now();(function loop(n){window.renderFrame(((n-t0)/1400)%1);requestAnimationFrame(loop);})(t0);}
+</script></body></html>

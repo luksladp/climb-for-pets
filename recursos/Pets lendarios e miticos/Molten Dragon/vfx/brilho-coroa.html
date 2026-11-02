@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Molten Dragon — brilho dourado de estrela na coroa (Loop)</title>
+<style>html, body { margin: 0; background: transparent; } body.preview { background: #1b1f33; display: grid; place-items: center; height: 100vh; } canvas { display: block; }</style>
+</head>
+<body>
+<!-- Efeito do Molten Dragon (Mythic, Volcano) para flipbook do Roblox: brilho dourado de estrela na coroa (Loop)
+     Contrato de Recursos/VFX/halo-solar.html: <canvas id="fx">, window.renderFrame(t) determinístico, margem de 8%.
+     Gerar: python .framework/flipbook.py "Recursos/Pets lendarios e miticos/Molten Dragon/vfx/brilho-coroa.html" --grade 4 --loop -->
+<canvas id="fx" width="512" height="512"></canvas>
+<script>
+const canvas = document.getElementById('fx');
+const ctx = canvas.getContext('2d');
+function rng(seed) { return () => (seed = (seed * 16807) % 2147483647) / 2147483647; }
+function glow(x, y, r, stops) {
+  const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+  stops.forEach(([o, c]) => g.addColorStop(o, c));
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+}
+const TAU = Math.PI * 2;
+window.renderFrame = function (t) {
+  const s = canvas.width, c = s / 2;
+  ctx.clearRect(0, 0, s, s);
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+
+  // estrela de 4 pontas que pisca e gira de leve
+  const k = Math.sin(Math.PI * t) ** 2, rot = t * TAU / 8;
+  glow(c, c, s * 0.2 * (0.4 + k), [[0, `rgba(255,250,220,${0.9 * k})`], [0.4, `rgba(255,205,80,${0.5 * k})`], [1, 'rgba(255,170,30,0)']]);
+  ctx.translate(c, c); ctx.rotate(rot);
+  for (let i = 0; i < 4; i++) {
+    ctx.rotate(TAU / 4);
+    const L = s * (0.16 + 0.26 * k) * (i % 2 ? 0.75 : 1), w = s * 0.03 * (0.5 + k);
+    const g = ctx.createLinearGradient(0, 0, L, 0);
+    g.addColorStop(0, `rgba(255,248,200,${k})`); g.addColorStop(1, 'rgba(255,190,40,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(0, -w); ctx.lineTo(L, 0); ctx.lineTo(0, w); ctx.fill();
+  }
+  ctx.restore();
+};
+if (!navigator.webdriver) {
+  document.body.classList.add('preview');
+  const t0 = performance.now();
+  (function loop(now) { window.renderFrame(((now - t0) / 1000 / 1.2) % 1); requestAnimationFrame(loop); })(t0);
+}
+</script>
+</body>
+</html>
