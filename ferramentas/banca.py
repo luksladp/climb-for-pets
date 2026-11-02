@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Junta os vereditos da banca de 3 revisores num veredito só, por maioria em cada critério.
 
-Uso (a partir de jogos/):
-    python .framework/banca.py --vereditos r1.md r2.md r3.md [--travar 2,3,5 --anterior consolidado_anterior.md] \
+Uso (a partir da raiz do repositório):
+    python ferramentas/banca.py --vereditos r1.md r2.md r3.md [--travar 2,3,5 --anterior consolidado_anterior.md] \
         [--saida consolidado.md]
 
 Cada arquivo é a resposta de um revisor, com a tabela da régua:

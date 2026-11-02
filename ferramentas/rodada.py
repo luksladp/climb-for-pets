@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Uma rodada de um pet num comando só: build das variantes em paralelo, render padrão, checagem e folha.
 
-Uso (a partir de jogos/; precisa de `pip install bpy pillow numpy scipy scikit-image`):
-    python .framework/rodada.py --pet "Lava Titan" --rodada 18 [--variantes A B C] [--modo rapido|final] \
+Uso (a partir da raiz do repositório; precisa de `pip install bpy pillow numpy scipy scikit-image`):
+    python ferramentas/rodada.py --pet "Lava Titan" --rodada 18 [--variantes A B C] [--modo rapido|final] \
         [--pior 1,2] [--efeitos] [--sem-build]
-    python .framework/rodada.py --pet "Lava Titan" --rodada 18 --aplicar B     # guarda a variante escolhida
+    python ferramentas/rodada.py --pet "Lava Titan" --rodada 18 --aplicar B     # guarda a variante escolhida
 
 O que faz, para cada variante (VARIANTE=A, B... no ambiente do build; sem --variantes, uma só, "base"):
   1. roda os comandos de build do `rodada.json` do pet, cada variante na sua pasta de trabalho;
@@ -18,7 +18,7 @@ Com --efeitos (ou --modo final) também gera as vistas com efeitos pelo script d
 --aplicar copia a variante escolhida para a pasta do pet (GLB, vistas, ícone e os arquivos de "copiar"), e ela
 passa a ser a "rodada anterior" da próxima. Quem escolhe é o revisor, na folha de variantes.
 
-O `rodada.json` fica em `Recursos/Pets lendarios e miticos/<Pet>/` e diz como montar o pet:
+O `rodada.json` fica em `recursos/Pets lendarios e miticos/<Pet>/` e diz como montar o pet:
     {"raridade": "legendary", "lote": ["Volcanic Phoenix", "Molten Dragon"], "glb": "LavaTitan.glb",
      "build": [["python3", "{fonte}/build_v3.py", "--out", "{saida}"]],
      "efeitos": [[...]], "efeitos_vistas": "{saida}/fx/{vista}_fx.png", "copiar": ["LavaTitan_paleta.png"]}
@@ -40,7 +40,7 @@ from pathlib import Path
 
 FW = Path(__file__).resolve().parent
 ROOT = FW.parent
-PETS = ROOT / "Recursos" / "Pets lendarios e miticos"
+PETS = ROOT / "recursos" / "Pets lendarios e miticos"
 TRABALHO = ROOT / ".rodadas"
 VISTAS = ("frente", "tres_quartos", "lado")
 PY = sys.executable

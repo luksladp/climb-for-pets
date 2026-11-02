@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Checagem automática de um pet antes do revisor: mede em segundos o que dá para medir.
 
-Uso (a partir de jogos/; precisa de `pip install numpy pillow scipy`):
-    python .framework/checar.py --pet "Lava Titan" --raridade legendary --glb <pet.glb> --vistas <pasta> \
+Uso (a partir da raiz do repositório; precisa de `pip install numpy pillow scipy`):
+    python ferramentas/checar.py --pet "Lava Titan" --raridade legendary --glb <pet.glb> --vistas <pasta> \
         [--anterior-glb <rodada_anterior.glb>] [--anterior-vistas <pasta>] [--pior 1,6] [--json saida.json]
 
 --vistas é a pasta do render_pet.py (frente.png, tres_quartos.png, lado.png, icone_128.png).
@@ -25,7 +25,7 @@ import numpy as np
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
-SAE = ROOT / "Recursos" / "Referencias de pets raros" / "Steal An Egg - pets recentes"
+SAE = ROOT / "recursos" / "Referencias de pets raros" / "Steal An Egg - pets recentes"
 SAE_DEGRAU = {
     "legendary": ["pumpkin-golem", "graveyard-brute", "abomination-kong", "bloodbloom",
                   "grave-cerberus", "phantom-dragon", "pumpkin-brute"],

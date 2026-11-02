@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Monta a folha de comparação de um pet com os pets do Steal An Egg do mesmo degrau de raridade.
 
-Uso (a partir de jogos/):
-    python .framework/comparar.py --pet "Kraken" --raridade legendary \
+Uso (a partir da raiz do repositório):
+    python ferramentas/comparar.py --pet "Kraken" --raridade legendary \
         --imagens print_frente.png print_34.png print_lado.png \
         [--lote outro1.png outro2.png] [--origem studio|blender] [--icone icone.png] [--efeitos] [--saida folha.png]
 
@@ -22,9 +22,9 @@ import sys
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 ROOT = Path(__file__).resolve().parent.parent
-SAE = ROOT / "Recursos" / "Referencias de pets raros" / "Steal An Egg - pets recentes"
+SAE = ROOT / "recursos" / "Referencias de pets raros" / "Steal An Egg - pets recentes"
 # Imagens-alvo finais (decisão do usuário, 31/10/2026): o pet tem que ficar extremamente parecido com elas.
-ALVOS = ROOT / "Recursos" / "Pets lendarios e miticos" / "Alvos finais"
+ALVOS = ROOT / "recursos" / "Pets lendarios e miticos" / "Alvos finais"
 # Primeiro os renders 3D do jogo (mais confiáveis), depois as ilustrações do site.
 REFERENCIAS = {
     "legendary": ["pumpkin-golem", "graveyard-brute", "abomination-kong", "bloodbloom",

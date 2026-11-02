@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Kit único de render dos pets: mesmas câmeras, luz, fundo e ícone para todos os pets, a partir do GLB.
 
-Uso (a partir de jogos/; precisa de `pip install bpy pillow numpy`):
-    python .framework/render_pet.py --glb "Recursos/Pets lendarios e miticos/Lava Titan/LavaTitan.glb" \
+Uso (a partir da raiz do repositório; precisa de `pip install bpy pillow numpy`):
+    python ferramentas/render_pet.py --glb "recursos/Pets lendarios e miticos/Lava Titan/LavaTitan.glb" \
         --saida /tmp/titan [--modo rapido|final] [--vistas frente,tres_quartos,lado] [--sem-icone] \
         [--frente +x|-x|+y|-y] [--clip Idle --quadro 1]
 
